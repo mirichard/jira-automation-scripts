@@ -1,0 +1,43 @@
+# Send Slack alert when blocker issues are created
+name: Slack Alert on Blocker Created
+description: Automatically sends Slack notification when issues with Blocker priority are created
+trigger:
+  type: issue_created
+condition:
+  type: priority_equals
+  value: Blocker
+actions:
+  - type: send_webhook
+    webhookUrl: "https://hooks.slack.com/services/{{env.SLACK_WEBHOOK_TOKEN}}"
+    payload: |
+      {
+        "text": "🚨 *Blocker Issue Created*",
+        "attachments": [
+          {
+            "color": "danger",
+            "fields": [
+              {
+                "title": "Issue",
+                "value": "<{{issue.url}}|{{issue.key}}>: {{issue.summary}}",
+                "short": false
+              },
+              {
+                "title": "Assignee",
+                "value": "{{issue.assignee.displayName}}",
+                "short": true
+              },
+              {
+                "title": "Reporter",
+                "value": "{{issue.reporter.displayName}}",
+                "short": true
+              }
+            ]
+          }
+        ]
+      }
+  - type: add_comment
+    comment: "Slack notification sent to team about this blocker issue."
+
+# Rollback Plan: No rollback needed for notifications, but can disable webhook
+# Testing: Create issue with Blocker priority, verify Slack notification
+# Dependencies: Requires SLACK_WEBHOOK_TOKEN environment variable

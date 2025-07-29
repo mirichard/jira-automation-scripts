@@ -1,0 +1,30 @@
+# Create a sub-task in Jira when a GitHub issue is created in a linked repo
+name: Create Subtask from GitHub Issue
+description: Automatically creates a Jira sub-task when a GitHub issue is created in linked repositories
+trigger:
+  type: webhook
+  webhookEvent: github.issue_opened
+condition:
+  type: repository_in_list
+  repositories: ["mirichard/jira-automation-scripts", "mirichard/flow-foundry"]
+actions:
+  - type: create_issue
+    issue_type: Sub-task
+    parent: "{{#if(issue.labels.contains('epic'))}}{{issue.key}}{{else}}SCRUM-1{{/}}"
+    summary: "GitHub Issue: {{webhookData.issue.title}}"
+    description: |
+      This sub-task tracks a GitHub issue from repository {{webhookData.repository.full_name}}.
+      
+      GitHub Issue: {{webhookData.issue.html_url}}
+      Title: {{webhookData.issue.title}}
+      Author: {{webhookData.issue.user.login}}
+      
+      Description:
+      {{webhookData.issue.body}}
+    labels: ["github-issue", "automation-created"]
+  - type: add_comment
+    comment: "GitHub issue {{webhookData.issue.html_url}} tracked as Jira sub-task"
+
+# Rollback Plan: Delete created sub-task if incorrectly generated
+# Testing: Create GitHub issue in linked repo, verify Jira sub-task creation
+# Dependencies: Requires GitHub webhook setup and parent issue existence

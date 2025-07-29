@@ -1,0 +1,14 @@
+# Transition to In Progress When GitHub PR is Opened
+name: Transition to In Progress on PR
+description: Automatically transitions Jira issues to "In Progress" when a GitHub PR is opened with the issue key in title or body
+trigger: 
+  type: webhook
+  webhookEvent: github.pr_opened
+condition: 
+  type: regex
+  source: webhookData.pull_request.body
+  pattern: SCRUM-\d+
+actions:
+  - type: transition_issue
+    status: In Progress
+    comment: "Issue automatically transitioned to In Progress due to GitHub PR {{webhookData.pull_request.html_url}}"

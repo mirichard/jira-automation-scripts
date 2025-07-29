@@ -1,0 +1,20 @@
+# Flag Stale Issues (5+ Days Without Update)
+name: Flag Stale Issues
+description: Adds a "stale" label and comment to issues that haven't been updated for 5+ days
+trigger: 
+  type: scheduled
+  interval: daily
+condition: 
+  type: and
+  conditions:
+    - type: issue_updated_before
+      days: 5
+    - type: status_not_in
+      statuses: [Done, "Won't Do", Closed]
+    - type: labels_not_include
+      labels: [stale]
+actions:
+  - type: add_label
+    label: stale
+  - type: add_comment
+    comment: "⚠️ This issue has been marked as stale because it hasn't been updated in 5+ days. Please review and update if still relevant."

@@ -1,0 +1,25 @@
+# Transition issue to "Code Review" when PR is opened with Jira key in title or branch
+name: Transition to Code Review on PR
+description: Automatically transitions Jira issues to "Code Review" when a GitHub PR is opened with the issue key
+trigger:
+  type: webhook
+  webhookEvent: github.pr_opened
+condition:
+  type: or
+  conditions:
+    - type: regex
+      source: webhookData.pull_request.title
+      pattern: SCRUM-\d+
+    - type: regex
+      source: webhookData.pull_request.head.ref
+      pattern: SCRUM-\d+
+actions:
+  - type: transition_issue
+    status: "Code Review"
+    comment: "Issue automatically transitioned to Code Review due to GitHub PR {{webhookData.pull_request.html_url}}"
+  - type: add_label
+    label: "has-pr"
+
+# Rollback Plan: Manually transition back from Code Review if incorrect
+# Testing: Open PR with SCRUM-### in title/branch, verify transition
+# Dependencies: Requires "Code Review" status in workflow and GitHub webhook setup

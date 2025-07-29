@@ -1,0 +1,16 @@
+# Auto-Assign Issues Based on Label
+name: Auto-Assign Based on Label
+trigger: 
+  type: issue_created
+condition: 
+  type: labels_include
+  labels: 
+    - backend
+    - frontend
+actions:
+  - type: assign_issue
+    assignee:
+      smartValue: >
+        {{#if(equals(issue.labels, "backend"))}}dev-lead{{/}}
+        {{#if(equals(issue.labels, "frontend"))}}ui-lead{{/}}
+

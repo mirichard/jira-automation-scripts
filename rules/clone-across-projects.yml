@@ -1,0 +1,18 @@
+# Clone epics/tickets across projects
+name: Clone Across Projects
+description: Automatically clones epics and tickets from SCRUM to PMO, DEVOPS, or TEST projects based on label
+trigger:
+  type: label_added
+  label: clone-projects
+condition:
+  type: issue_type_in
+  values: ["Epic", "Story", "Task"]
+actions:
+  - type: clone_issue
+    target_projects: ["PMO", "DEVOPS", "TEST"]
+    copy_fields: ["summary", "description", "labels", "attachments"]
+    link_issues: true
+
+# Rollback Plan: Manually delete clones if incorrectly created.
+# Testing: Add clone-projects label to epics, verify clone in target projects
+# Dependencies: Requires appropriate permissions for project access

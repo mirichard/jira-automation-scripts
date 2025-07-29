@@ -1,0 +1,14 @@
+# Log time automatically upon transitioning to "In Review" or "In QA"
+name: Log Time on Transition to Review or QA
+description: Automatically logs default time when issues transition to "In Review" or "In QA"
+trigger:
+  type: issue_transitioned
+  status: ["In Review", "In QA"]
+actions:
+  - type: log_time
+    time: 1h
+    comment: "Default review/QA time logged automatically."
+
+# Rollback Plan: Manually adjust or delete time logs if needed.
+# Testing: Create a transition to "In Review"/"In QA" and check if the time is logged.
+# Dependencies: "In Review" and "In QA" statuses must exist in project.

@@ -1,0 +1,30 @@
+# Auto-escalate blockers to an OPS project via linked issue
+name: Auto-escalate Blockers to OPS
+description: Automatically escalates blocker issues by creating linked tickets in the OPS project
+trigger:
+  type: priority_changed
+  to: Blocker
+actions:
+  - type: create_linked_issue
+    project: OPS
+    issue_type: Task
+    summary: "ESCALATION: {{issue.summary}}"
+    description: |
+      This is an escalated blocker from the SCRUM project requiring immediate attention.
+      
+      Original Issue: {{issue.key}}
+      Priority: {{issue.priority}}
+      Summary: {{issue.summary}}
+      Description: {{issue.description}}
+      
+      Please resolve this blocker as soon as possible.
+    priority: Highest
+    link_type: "blocks"
+  - type: add_comment
+    comment: "🚨 Blocker escalated to OPS project for immediate resolution. OPS ticket created and linked."
+  - type: add_label
+    label: "escalated-to-ops"
+
+# Rollback Plan: Remove escalated label and delete OPS ticket if incorrectly escalated
+# Testing: Change issue priority to Blocker, verify OPS project ticket creation
+# Dependencies: Requires access to OPS project and "blocks" link type

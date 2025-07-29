@@ -1,0 +1,31 @@
+# Add comment to Jira issue when PR is merged
+name: Add Comment on PR Merge
+description: Automatically adds a comment to Jira issues when associated GitHub PR is merged
+trigger:
+  type: webhook
+  webhookEvent: github.pr_merged
+condition:
+  type: or
+  conditions:
+    - type: regex
+      source: webhookData.pull_request.title
+      pattern: SCRUM-\d+
+    - type: regex
+      source: webhookData.pull_request.body
+      pattern: SCRUM-\d+
+actions:
+  - type: add_comment
+    comment: |
+      ✅ **GitHub PR Merged**
+      
+      PR: {{webhookData.pull_request.html_url}}
+      Title: {{webhookData.pull_request.title}}
+      Merged by: {{webhookData.pull_request.merged_by.login}}
+      Merge commit: {{webhookData.pull_request.merge_commit_sha}}
+  - type: transition_issue
+    status: "Ready for Testing"
+    comment: "Code merged, ready for testing phase"
+
+# Rollback Plan: Manually adjust status if incorrect transition occurs
+# Testing: Merge PR with SCRUM-### reference, verify comment and transition
+# Dependencies: Requires GitHub webhook setup and "Ready for Testing" status

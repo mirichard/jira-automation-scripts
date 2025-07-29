@@ -1,0 +1,26 @@
+# Auto-close issues with no response for 7 days after transition to "Waiting for Info"
+name: Auto-close Waiting for Info Issues
+description: Automatically closes issues that have been in "Waiting for Info" status for 7 days without any response
+trigger:
+  type: scheduled
+  interval: daily
+  time: "09:00"
+condition:
+  type: and
+  conditions:
+    - type: status_equals
+      value: "Waiting for Info"
+    - type: issue_updated_before
+      days: 7
+    - type: no_comments_since_status_change
+      status: "Waiting for Info"
+actions:
+  - type: transition_issue
+    status: Closed
+    comment: "Issue automatically closed due to no response for 7 days while waiting for information. Please reopen if needed."
+  - type: add_label
+    label: "auto-closed"
+
+# Rollback Plan: Issues can be manually reopened and the "auto-closed" label can be removed
+# Testing: Create test issue, transition to "Waiting for Info", wait 7 days (or modify date), verify closure
+# Dependencies: Requires "Waiting for Info" status to exist in project workflow

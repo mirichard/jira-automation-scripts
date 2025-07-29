@@ -1,0 +1,37 @@
+# Reopen Jira issue when PR is closed without merging
+name: Reopen Issue on PR Close Without Merge
+description: Automatically reopens Jira issues when associated GitHub PR is closed without merging
+trigger:
+  type: webhook
+  webhookEvent: github.pr_closed
+condition:
+  type: and
+  conditions:
+    - type: or
+      conditions:
+        - type: regex
+          source: webhookData.pull_request.title
+          pattern: SCRUM-\d+
+        - type: regex
+          source: webhookData.pull_request.body
+          pattern: SCRUM-\d+
+    - type: equals
+      source: webhookData.pull_request.merged
+      value: false
+actions:
+  - type: transition_issue
+    status: "To Do"
+    comment: |
+      🔄 **GitHub PR Closed Without Merge**
+      
+      PR: {{webhookData.pull_request.html_url}}
+      Title: {{webhookData.pull_request.title}}
+      Closed by: {{webhookData.sender.login}}
+      
+      Issue reopened because the PR was closed without merging.
+  - type: remove_label
+    label: "has-pr"
+
+# Rollback Plan: Manually transition issue back if reopening was incorrect
+# Testing: Close PR without merging that references SCRUM-###, verify issue reopening
+# Dependencies: Requires GitHub webhook setup and proper status workflow

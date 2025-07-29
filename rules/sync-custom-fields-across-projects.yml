@@ -1,0 +1,21 @@
+# Sync custom fields (like Story Points) across linked issues in other projects
+name: Sync Custom Fields Across Projects
+description: Automatically synchronizes custom fields like Story Points across linked issues in different projects
+trigger:
+  type: custom_field_changed
+  fields: ["Story Points", "Priority", "Sprint"]
+condition:
+  type: has_linked_issues
+  projects: ["PMO", "DEVOPS", "TEST"]
+actions:
+  - type: update_linked_issues
+    fields:
+      - field: "Story Points"
+        value: "{{issue.customFields.storyPoints}}"
+      - field: "Priority"
+        value: "{{issue.priority}}"
+    comment: "Custom fields synchronized from {{issue.key}} in {{issue.project.key}} project"
+
+# Rollback Plan: Manually revert field values on linked issues if sync is incorrect
+# Testing: Change Story Points on issue with links, verify sync to linked issues
+# Dependencies: Requires linked issues and matching custom field names across projects

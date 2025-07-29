@@ -1,0 +1,50 @@
+# Auto-Tag Issues Based on Keywords
+name: Auto-Tag Based on Keywords
+description: Automatically adds labels to issues based on keywords found in summary or description
+trigger: 
+  type: issue_created
+condition: 
+  type: always_true
+actions:
+  - type: conditional_action
+    conditions:
+      - condition:
+          type: regex
+          source: "{{issue.summary}} {{issue.description}}"
+          pattern: "(bug|error|crash|fail)"
+          flags: i
+        actions:
+          - type: add_label
+            label: bug-related
+      - condition:
+          type: regex
+          source: "{{issue.summary}} {{issue.description}}"
+          pattern: "(performance|slow|timeout|optimization)"
+          flags: i
+        actions:
+          - type: add_label
+            label: performance
+      - condition:
+          type: regex
+          source: "{{issue.summary}} {{issue.description}}"
+          pattern: "(security|vulnerability|auth|permission)"
+          flags: i
+        actions:
+          - type: add_label
+            label: security
+      - condition:
+          type: regex
+          source: "{{issue.summary}} {{issue.description}}"
+          pattern: "(ui|ux|design|frontend|css)"
+          flags: i
+        actions:
+          - type: add_label
+            label: frontend
+      - condition:
+          type: regex
+          source: "{{issue.summary}} {{issue.description}}"
+          pattern: "(api|backend|database|server)"
+          flags: i
+        actions:
+          - type: add_label
+            label: backend

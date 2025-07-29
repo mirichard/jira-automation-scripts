@@ -1,0 +1,21 @@
+# Enforce checklist completion before allowing transition to "Done"
+name: Enforce Checklist Completion Before Done
+description: Prevents transition to "Done" status unless all required checklist items are completed
+trigger:
+  type: issue_transition_requested
+  status: Done
+condition:
+  type: not
+  condition:
+    type: custom_field_contains
+    field: "Checklist"
+    value: "[ ]" # Unchecked items
+actions:
+  - type: block_transition
+    message: "Cannot transition to Done: Please complete all checklist items before marking as done."
+  - type: add_comment
+    comment: "⚠️ Transition to Done blocked: Checklist items must be completed. Please review and check off all items."
+
+# Rollback Plan: Manually override transition if checklist validation is incorrect
+# Testing: Create issue with checklist, attempt transition with incomplete items
+# Dependencies: Requires "Checklist" custom field in project configuration

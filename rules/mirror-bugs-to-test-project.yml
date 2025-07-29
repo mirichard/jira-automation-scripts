@@ -1,0 +1,26 @@
+# Mirror defect tickets into the TEST project when issue type = "Bug"
+name: Mirror Bugs to TEST Project
+description: Automatically creates a mirrored copy of bug tickets in the TEST project for tracking
+trigger:
+  type: issue_created
+condition:
+  type: issue_type_equals
+  value: Bug
+actions:
+  - type: create_linked_issue
+    project: TEST
+    issue_type: Task
+    summary: "TEST: {{issue.summary}}"
+    description: |
+      This issue tracks testing related to bug {{issue.key}} in the SCRUM project.
+      
+      Original Bug: {{issue.key}}
+      Original Summary: {{issue.summary}}
+      Original Description: {{issue.description}}
+    link_type: "relates to"
+  - type: add_comment
+    comment: "Bug mirrored to TEST project for quality assurance tracking."
+
+# Rollback Plan: Delete linked TEST issue if incorrectly created
+# Testing: Create bug in SCRUM, verify TEST project issue creation
+# Dependencies: Requires access to TEST project and "relates to" link type

@@ -1,0 +1,74 @@
+# Create Risk/Decision Log Tasks from Comments
+name: Create Risk/Decision Log Tasks
+description: Creates linked risk or decision log tasks when users comment with /risk: or /decision: patterns
+trigger: 
+  type: issue_commented
+condition: 
+  type: or
+  conditions:
+    - type: regex
+      source: "{{comment.body}}"
+      pattern: "^/risk:\\s*(.+)$"
+      flags: im
+    - type: regex
+      source: "{{comment.body}}"
+      pattern: "^/decision:\\s*(.+)$"
+      flags: im
+actions:
+  - type: conditional_action
+    conditions:
+      - condition:
+          type: regex
+          source: "{{comment.body}}"
+          pattern: "^/risk:\\s*(.+)$"
+          flags: im
+        actions:
+          - type: create_linked_issue
+            project: SCRUM
+            issueType: Task
+            summary: "RISK: {{comment.body.match('^/risk:\\s*(.+)$')[1]}}"
+            description: |
+              🚨 **Risk Identified**
+              
+              **Related Issue:** {{issue.key}} - {{issue.summary}}
+              **Identified By:** {{comment.author.displayName}}
+              **Date:** {{now.format('MM/dd/yyyy')}}
+              
+              **Risk Description:**
+              {{comment.body.match('^/risk:\\s*(.+)$')[1]}}
+              
+              **Action Required:**
+              - [ ] Assess risk impact and probability
+              - [ ] Develop mitigation strategies
+              - [ ] Assign risk owner
+              - [ ] Update risk register
+            labels: [risk, risk-management]
+            linkType: blocks
+      - condition:
+          type: regex
+          source: "{{comment.body}}"
+          pattern: "^/decision:\\s*(.+)$"
+          flags: im
+        actions:
+          - type: create_linked_issue
+            project: SCRUM
+            issueType: Task
+            summary: "DECISION: {{comment.body.match('^/decision:\\s*(.+)$')[1]}}"
+            description: |
+              📋 **Decision Required**
+              
+              **Related Issue:** {{issue.key}} - {{issue.summary}}
+              **Requested By:** {{comment.author.displayName}}
+              **Date:** {{now.format('MM/dd/yyyy')}}
+              
+              **Decision Needed:**
+              {{comment.body.match('^/decision:\\s*(.+)$')[1]}}
+              
+              **Action Required:**
+              - [ ] Gather stakeholder input
+              - [ ] Evaluate options
+              - [ ] Make decision
+              - [ ] Document rationale
+              - [ ] Communicate decision
+            labels: [decision, decision-log]
+            linkType: relates to

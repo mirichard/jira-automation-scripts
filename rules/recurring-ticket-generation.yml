@@ -1,0 +1,28 @@
+# Generate Recurring Tickets (Weekly QA Prep)
+name: Generate Recurring QA Prep Tickets
+description: Creates weekly QA preparation tickets every Monday
+trigger: 
+  type: scheduled
+  interval: weekly
+  day: Monday
+  time: "09:00"
+condition: 
+  type: always_true
+actions:
+  - type: create_issue
+    project: SCRUM
+    issueType: Task
+    summary: "Weekly QA Prep - Week of {{now.format('MM/dd/yyyy')}}"
+    description: |
+      📋 **Weekly QA Preparation Tasks**
+      
+      - [ ] Review test cases for upcoming releases
+      - [ ] Update test environments
+      - [ ] Verify automated test coverage
+      - [ ] Check for any blockers or dependencies
+      - [ ] Coordinate with development team on testing priorities
+      
+      **Due Date:** {{now.plusDays(5).format('MM/dd/yyyy')}}
+    assignee: qa-lead
+    labels: [recurring, qa-prep]
+    dueDate: "{{now.plusDays(5).format('yyyy-MM-dd')}}"

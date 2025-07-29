@@ -1,0 +1,14 @@
+# Close Subtasks When Parent Issue is Done
+name: Close Subtasks When Parent Closes
+description: Automatically closes all subtasks when the parent issue is transitioned to "Done"
+trigger: 
+  type: issue_transitioned
+  status: Done
+condition: 
+  type: issue_type_equals
+  value: Story
+actions:
+  - type: transition_related_issues
+    relation: sub-tasks
+    status: Done
+    comment: "Subtask automatically closed because parent {{issue.key}} was completed"

@@ -1,0 +1,39 @@
+# Send Weekly Status Summary
+name: Weekly Status Summary
+description: Generates and sends a weekly summary of issue status by assignee and type
+trigger: 
+  type: scheduled
+  interval: weekly
+  day: Friday
+  time: "17:00"
+condition: 
+  type: always_true
+actions:
+  - type: send_webhook
+    webhookUrl: "{{system.webhook.slack}}"
+    payload: |
+      {
+        "text": "📊 *Weekly SCRUM Project Summary*",
+        "blocks": [
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Week Ending:* {{now.format('MM/dd/yyyy')}}\n*Total Active Issues:* {{#jql}}project = SCRUM AND status NOT IN (Done, Closed){{/jql}}"
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*In Progress:*\n{{#jql}}project = SCRUM AND status = 'In Progress'{{/jql}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*To Do:*\n{{#jql}}project = SCRUM AND status = 'To Do'{{/jql}}"
+              }
+            ]
+          }
+        ]
+      }

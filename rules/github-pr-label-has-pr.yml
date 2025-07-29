@@ -1,0 +1,33 @@
+# Label issues automatically with "has-PR" when linked to a GitHub pull request
+name: Label Issues with Has-PR
+description: Automatically adds "has-PR" label to issues when they are linked to a GitHub pull request
+trigger:
+  type: webhook
+  webhookEvent: github.pr_opened
+condition:
+  type: or
+  conditions:
+    - type: regex
+      source: webhookData.pull_request.title
+      pattern: SCRUM-\d+
+    - type: regex
+      source: webhookData.pull_request.body
+      pattern: SCRUM-\d+
+    - type: regex
+      source: webhookData.pull_request.head.ref
+      pattern: SCRUM-\d+
+actions:
+  - type: add_label
+    label: "has-pr"
+  - type: add_comment
+    comment: |
+      🔗 **GitHub PR Linked**
+      
+      PR: {{webhookData.pull_request.html_url}}
+      Title: {{webhookData.pull_request.title}}
+      Branch: {{webhookData.pull_request.head.ref}}
+      Author: {{webhookData.pull_request.user.login}}
+
+# Rollback Plan: Manually remove "has-pr" label if incorrectly applied
+# Testing: Open PR with SCRUM-### reference, verify label addition
+# Dependencies: Requires GitHub webhook setup

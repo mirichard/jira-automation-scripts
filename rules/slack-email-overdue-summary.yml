@@ -1,0 +1,47 @@
+# Send Slack/email summary of overdue tasks weekly
+name: Weekly Overdue Tasks Summary
+description: Sends a weekly summary of overdue tasks via Slack and email
+trigger:
+  type: scheduled
+  interval: weekly
+  day: Monday
+  time: "09:00"
+actions:
+  - type: send_webhook
+    webhookUrl: "https://hooks.slack.com/services/{{env.SLACK_WEBHOOK_TOKEN}}"
+    payload: |
+      {
+        "text": "📊 *Weekly Overdue Tasks Summary*",
+        "attachments": [
+          {
+            "color": "warning",
+            "text": "{{lookupIssues('project=SCRUM AND due < now() AND status != Done').size}} overdue tasks this week",
+            "fields": [
+              {
+                "title": "Overdue Issues",
+                "value": "{{#each(lookupIssues('project=SCRUM AND due < now() AND status != Done'))}}\n• <{{issue.url}}|{{issue.key}}>: {{issue.summary}} (Due: {{issue.dueDate}})\n{{/each}}",
+                "short": false
+              }
+            ]
+          }
+        ]
+      }
+  - type: send_email
+    to: ["{{env.PROJECT_MANAGER_EMAIL}}", "{{env.TEAM_LEAD_EMAIL}}"]
+    subject: "Weekly Overdue Tasks Summary - {{now().format('YYYY-MM-DD')}}"
+    body: |
+      Weekly Summary of Overdue Tasks in SCRUM Project
+      
+      Total Overdue: {{lookupIssues('project=SCRUM AND due < now() AND status != Done').size}} issues
+      
+      Details:
+      {{#each(lookupIssues('project=SCRUM AND due < now() AND status != Done'))}}
+      - {{issue.key}}: {{issue.summary}}
+        Due: {{issue.dueDate}}
+        Assignee: {{issue.assignee.displayName}}
+        Status: {{issue.status.name}}
+      {{/each}}
+
+# Rollback Plan: Disable scheduled trigger if notifications become excessive
+# Testing: Manually trigger or wait for Monday 9 AM, verify Slack/email delivery
+# Dependencies: Requires SLACK_WEBHOOK_TOKEN, PROJECT_MANAGER_EMAIL, TEAM_LEAD_EMAIL

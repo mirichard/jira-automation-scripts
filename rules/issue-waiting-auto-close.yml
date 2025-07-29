@@ -1,0 +1,17 @@
+# Auto-Close Issues With No Response (Waiting for Info)
+name: Auto-Close Waiting Issues
+description: Automatically closes issues that have been in "Waiting for Info" status for 7+ days without response
+trigger: 
+  type: scheduled
+  interval: daily
+condition: 
+  type: and
+  conditions:
+    - type: status_equals
+      status: "Waiting for Info"
+    - type: issue_updated_before
+      days: 7
+actions:
+  - type: transition_issue
+    status: "Won't Do"
+    comment: "🔒 Auto-closing this issue as it has been waiting for information for 7+ days without response. Please reopen if you have the required information."

@@ -1,0 +1,44 @@
+# Send direct Slack message to PO when >10 issues in an epic are still "To Do"
+name: Slack PO Alert for Large To Do Epics
+description: Sends direct Slack message to Product Owner when epics have more than 10 issues still in "To Do" status
+trigger:
+  type: scheduled
+  interval: daily
+  time: "10:00"
+condition:
+  type: jql_matches
+  jql: 'project=SCRUM AND issuetype=Epic AND "Epic Link" in (issuesInEpics("status = \"To Do\"")) AND "Epic Link" in (issuesInEpics("status = \"To Do\"")) GROUP BY "Epic Link" HAVING COUNT("Epic Link") > 10'
+actions:
+  - type: send_webhook
+    webhookUrl: "https://hooks.slack.com/services/{{env.SLACK_WEBHOOK_TOKEN}}"
+    payload: |
+      {
+        "channel": "@{{env.PRODUCT_OWNER_SLACK_ID}}",
+        "text": "📋 *Epic Planning Alert*",
+        "attachments": [
+          {
+            "color": "warning",
+            "text": "The following epics have more than 10 issues still in 'To Do' status:",
+            "fields": [
+              {
+                "title": "Epics Requiring Attention",
+                "value": "{{#each(lookupIssues('project=SCRUM AND issuetype=Epic'))}}{{#if(issue.subtasks.filter(s => s.status.name == 'To Do').length > 10)}}• <{{issue.url}}|{{issue.key}}>: {{issue.summary}} ({{issue.subtasks.filter(s => s.status.name == 'To Do').length}} To Do issues)\n{{/if}}{{/each}}",
+                "short": false
+              }
+            ],
+            "actions": [
+              {
+                "type": "button",
+                "text": "Review Epics",
+                "url": "https://flow-foundry.atlassian.net/issues/?jql=project%3DSCRUM%20AND%20issuetype%3DEpic"
+              }
+            ]
+          }
+        ]
+      }
+  - type: add_comment
+    comment: "Product Owner notified about epics with >10 'To Do' issues requiring planning attention."
+
+# Rollback Plan: Disable scheduled trigger if alerts become excessive
+# Testing: Create epic with >10 subtasks in "To Do", wait for daily trigger
+# Dependencies: Requires SLACK_WEBHOOK_TOKEN, PRODUCT_OWNER_SLACK_ID environment variables
