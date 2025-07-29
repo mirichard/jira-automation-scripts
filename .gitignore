@@ -1,0 +1,7 @@
+# Local environment files - DO NOT COMMIT
+.env.local
+*.env.local
+.env
+*.env
+secrets/
+credentials.txt

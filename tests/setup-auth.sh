@@ -21,4 +21,4 @@ fi
 # Test the authentication
 echo "Testing Jira authentication..."
 curl -s -H "Authorization: Basic $JIRA_AUTH" \
-    "https://flow-foundry.atlassian.net/rest/api/3/myself" | jq -r '.displayName // "Authentication failed"'
+    "${JIRA_URL:-https://your-domain.atlassian.net}/rest/api/3/myself" | jq -r '.displayName // "Authentication failed"'
