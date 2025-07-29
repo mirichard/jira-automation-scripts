@@ -28,7 +28,7 @@ Cleans up ticket descriptions by removing stray escape characters (\\n, \\", etc
 
 ## 🤖 Jira Automation Rules
 
-The `/rules/` directory contains 23 comprehensive automation rules organized by category:
+The `/rules/` directory contains 24 comprehensive automation rules organized by category:
 
 ### 📋 General PM & Scrum Automation
 
@@ -154,7 +154,7 @@ export TEAM_LEAD_EMAIL="lead@example.com"
 
 | Rule Category | Rules Count | Tested | Passed | Notes |
 |---------------|-------------|--------|--------|---------|
-| General PM & Scrum | 8 | ✅ | ✅ | All basic triggers working |
+| General PM & Scrum | 8 | ✅ | ✅ | All basic triggers working - Auto-assignment confirmed (SCRUM-269) |
 | Quality & Reporting | 3 | ✅ | ⚠️ | Checklist validation needs custom field |
 | Cross-Project | 4 | ✅ | ⚠️ | Requires project permissions |
 | GitHub Integration | 5 | ✅ | ✅ | Webhook setup required |
@@ -261,4 +261,4 @@ source tests/setup-auth.sh && ./tests/test-automation-rules.sh
 *Created: 2025-07-29*  
 *Updated: 2025-07-29*  
 *Location: ~/pm-tools-templates/jira-automation-scripts/*  
-*Validation Status: ✅ Complete*
+*Validation Status: ✅ Complete - Auto-assignment automation confirmed working (2025-07-29)*
