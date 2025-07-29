@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Jira Automation Rules Testing Framework
-# This script tests each automation rule by creating test scenarios in the SCRUM project
+# This script tests each automation rule by creating test scenarios in the configured project
 
 set -e
 
 # Jira configuration (using existing environment variables)
-JIRA_URL="https://flow-foundry.atlassian.net"
-PROJECT_KEY="SCRUM"
+JIRA_URL="${JIRA_URL:-https://your-domain.atlassian.net}"
+PROJECT_KEY="${PROJECT_KEY:-YOUR_PROJECT}"
 
 # Colors for output
 RED='\033[0;31m'

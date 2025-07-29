@@ -6,8 +6,8 @@
 set -e
 
 # Configuration
-JIRA_URL="https://flow-foundry.atlassian.net"
-PROJECT_KEY="SCRUM"
+JIRA_URL="${JIRA_URL:-https://your-domain.atlassian.net}"
+PROJECT_KEY="${PROJECT_KEY:-YOUR_PROJECT}"
 BATCH_SIZE=5
 DELAY_BETWEEN_REQUESTS=2
 
@@ -126,10 +126,10 @@ update_ticket_description() {
 
 # Main execution
 main() {
-    log "Starting SCRUM ticket description cleanup process"
+    log "Starting $PROJECT_KEY ticket description cleanup process"
     
     # Get all Backlog tickets
-    log "Fetching SCRUM tickets in Backlog status..."
+    log "Fetching $PROJECT_KEY tickets in Backlog status..."
     
     local jql="project%3D${PROJECT_KEY}%20AND%20status%3D%22Backlog%22"
     local tickets_response=$(curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
