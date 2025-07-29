@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Bulk Delete Jira Tickets by Range Script
-# This script deletes SCRUM tickets in a specified number range (e.g., SCRUM-90 through SCRUM-196)
+# This script deletes tickets in a specified number range (e.g., PROJECT-90 through PROJECT-196)
 
 set -e
 
@@ -9,7 +9,7 @@ set -e
 JIRA_URL="${JIRA_URL:-https://your-domain.atlassian.net}"
 JIRA_EMAIL="${JIRA_EMAIL:-your-email@example.com}"
 JIRA_API_TOKEN="${JIRA_API_TOKEN:-your-api-token}"
-PROJECT_KEY="${PROJECT_KEY:-SCRUM}"
+PROJECT_KEY="${PROJECT_KEY:-YOUR_PROJECT}"
 
 # Default range (can be overridden with command line arguments)
 START_NUMBER="${START_NUMBER:-90}"

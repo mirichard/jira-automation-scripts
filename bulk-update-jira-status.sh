@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Bulk Update SCRUM Tickets to Backlog Status
-# This script changes all SCRUM tickets from "In Progress" to "Backlog"
+# Bulk Update Jira Tickets to Backlog Status
+# This script changes all tickets from "In Progress" to "Backlog"
 
 set -e
 
 # Configuration
-JIRA_URL="https://flow-foundry.atlassian.net"
-PROJECT_KEY="SCRUM"
+JIRA_URL="${JIRA_URL:-https://your-domain.atlassian.net}"
+PROJECT_KEY="${PROJECT_KEY:-YOUR_PROJECT}"
 FROM_STATUS="In Progress"
 TO_STATUS="Backlog"
 BATCH_SIZE=10
@@ -87,7 +87,7 @@ update_ticket_status() {
 
 # Main execution
 main() {
-    log "Starting bulk status update for SCRUM project tickets"
+    log "Starting bulk status update for $PROJECT_KEY project tickets"
     log "Changing tickets from '$FROM_STATUS' to '$TO_STATUS'"
     
     # Get all tickets that are "In Progress"

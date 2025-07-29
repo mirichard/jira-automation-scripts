@@ -1,6 +1,6 @@
 # Jira Automation Scripts & Utilities
 
-This repository contains utility scripts for managing Jira tickets and comprehensive automation rules for Jira Cloud projects. The automation rules are designed to work with the SCRUM project at `https://flow-foundry.atlassian.net`.
+This repository contains utility scripts for managing Jira tickets and comprehensive automation rules for Jira Cloud projects. Configure the scripts with your Jira instance URL and project key using environment variables.
 
 ## 🔧 Utility Scripts
 
@@ -11,7 +11,7 @@ Deletes Jira tickets with alert-type titles containing "Workflow Health Alert:" 
 - **Features:** Dry run mode, confirmation prompts, rate limiting
 
 ### 2. `bulk-delete-jira-range.sh`
-Deletes a range of Jira tickets by ticket number (e.g., SCRUM-90 to SCRUM-196)
+Deletes a range of Jira tickets by ticket number (e.g., PROJECT-90 to PROJECT-196)
 - **Usage:** `./bulk-delete-jira-range.sh`
 - **Setup:** See `JIRA_BULK_DELETE_RANGE_SETUP.md`
 - **Features:** Range validation, dry run mode, progress tracking
@@ -34,49 +34,49 @@ The `/rules/` directory contains 23 comprehensive automation rules organized by 
 
 | Rule File | Purpose | Trigger | Target Projects |
 |-----------|---------|---------|----------------|
-| `issue-created-assign-by-label.yml` | Auto-assign issues based on labels (backend/frontend) | Issue created | SCRUM |
-| `github-pr-open-transition.yml` | Transition to "In Progress" when GitHub PR opened | GitHub webhook | SCRUM |
-| `parent-done-close-subtasks.yml` | Close sub-tasks when parent issue is done | Issue transitioned | SCRUM |
-| `issue-stale-flag.yml` | Flag stale issues not updated for 5+ days | Scheduled (daily) | SCRUM |
-| `waiting-info-auto-close.yml` | Auto-close issues after 7 days with no response | Scheduled (daily) | SCRUM |
-| `recurring-ticket-generation.yml` | Generate recurring tickets (QA prep, grooming) | Scheduled (weekly/monthly) | SCRUM |
-| `weekly-status-summary.yml` | Send daily/weekly summary of issue status | Scheduled (weekly) | SCRUM |
-| `issue-auto-tag-keywords.yml` | Auto-tag issues based on keywords in summary/description | Issue created/updated | SCRUM |
+| `issue-created-assign-by-label.yml` | Auto-assign issues based on labels (backend/frontend) | Issue created | YOUR_PROJECT |
+| `github-pr-open-transition.yml` | Transition to "In Progress" when GitHub PR opened | GitHub webhook | YOUR_PROJECT |
+| `parent-done-close-subtasks.yml` | Close sub-tasks when parent issue is done | Issue transitioned | YOUR_PROJECT |
+| `issue-stale-flag.yml` | Flag stale issues not updated for 5+ days | Scheduled (daily) | YOUR_PROJECT |
+| `waiting-info-auto-close.yml` | Auto-close issues after 7 days with no response | Scheduled (daily) | YOUR_PROJECT |
+| `recurring-ticket-generation.yml` | Generate recurring tickets (QA prep, grooming) | Scheduled (weekly/monthly) | YOUR_PROJECT |
+| `weekly-status-summary.yml` | Send daily/weekly summary of issue status | Scheduled (weekly) | YOUR_PROJECT |
+| `issue-auto-tag-keywords.yml` | Auto-tag issues based on keywords in summary/description | Issue created/updated | YOUR_PROJECT |
 
 ### 🧪 Quality & Reporting Enhancements
 
 | Rule File | Purpose | Trigger | Target Projects |
 |-----------|---------|---------|----------------|
-| `comment-trigger-risk-decision.yml` | Create linked risk/decision log tasks | Comment added | SCRUM |
-| `log-time-on-transition-to-review-qa.yml` | Log time automatically on transition to "In Review" or "In QA" | Issue transitioned | SCRUM |
-| `enforce-checklist-completion-before-done.yml` | Enforce checklist completion before "Done" transition | Transition requested | SCRUM |
+| `comment-trigger-risk-decision.yml` | Create linked risk/decision log tasks | Comment added | YOUR_PROJECT |
+| `log-time-on-transition-to-review-qa.yml` | Log time automatically on transition to "In Review" or "In QA" | Issue transitioned | YOUR_PROJECT |
+| `enforce-checklist-completion-before-done.yml` | Enforce checklist completion before "Done" transition | Transition requested | YOUR_PROJECT |
 
 ### 🔁 Cross-Project Automation
 
 | Rule File | Purpose | Trigger | Target Projects |
 |-----------|---------|---------|----------------|
-| `clone-across-projects.yml` | Clone epics/tickets across projects | Label added | SCRUM → PMO, DEVOPS, TEST |
-| `mirror-bugs-to-test-project.yml` | Mirror defect tickets to TEST project | Issue created (Bug) | SCRUM → TEST |
+| `clone-across-projects.yml` | Clone epics/tickets across projects | Label added | YOUR_PROJECT → PMO, DEVOPS, TEST |
+| `mirror-bugs-to-test-project.yml` | Mirror defect tickets to TEST project | Issue created (Bug) | YOUR_PROJECT → TEST |
 | `sync-custom-fields-across-projects.yml` | Sync custom fields across linked issues | Custom field changed | Cross-project |
-| `auto-escalate-blockers-to-ops.yml` | Auto-escalate blockers to OPS project | Priority changed to Blocker | SCRUM → OPS |
+| `auto-escalate-blockers-to-ops.yml` | Auto-escalate blockers to OPS project | Priority changed to Blocker | YOUR_PROJECT → OPS |
 
 ### 🔗 GitHub Integration
 
 | Rule File | Purpose | Trigger | Target Projects |
 |-----------|---------|---------|----------------|
-| `github-pr-transition-code-review.yml` | Transition to "Code Review" when PR opened | GitHub webhook | SCRUM |
-| `github-pr-merged-comment.yml` | Add comment when PR is merged | GitHub webhook | SCRUM |
-| `github-pr-closed-reopen-issue.yml` | Reopen issue when PR closed without merge | GitHub webhook | SCRUM |
-| `github-pr-label-has-pr.yml` | Label issues with "has-PR" when linked to PR | GitHub webhook | SCRUM |
-| `github-issue-create-subtask.yml` | Create sub-task when GitHub issue created | GitHub webhook | SCRUM |
+| `github-pr-transition-code-review.yml` | Transition to "Code Review" when PR opened | GitHub webhook | YOUR_PROJECT |
+| `github-pr-merged-comment.yml` | Add comment when PR is merged | GitHub webhook | YOUR_PROJECT |
+| `github-pr-closed-reopen-issue.yml` | Reopen issue when PR closed without merge | GitHub webhook | YOUR_PROJECT |
+| `github-pr-label-has-pr.yml` | Label issues with "has-PR" when linked to PR | GitHub webhook | YOUR_PROJECT |
+| `github-issue-create-subtask.yml` | Create sub-task when GitHub issue created | GitHub webhook | YOUR_PROJECT |
 
 ### 📣 Slack/Email Integration
 
 | Rule File | Purpose | Trigger | Target Projects |
 |-----------|---------|---------|----------------|
-| `slack-alert-blocker-created.yml` | Send Slack alert when blocker issues created | Issue created | SCRUM |
-| `slack-email-overdue-summary.yml` | Send Slack/email summary of overdue tasks | Scheduled (weekly) | SCRUM |
-| `slack-po-epic-todo-alert.yml` | Alert PO when >10 issues in epic are "To Do" | Scheduled (daily) | SCRUM |
+| `slack-alert-blocker-created.yml` | Send Slack alert when blocker issues created | Issue created | YOUR_PROJECT |
+| `slack-email-overdue-summary.yml` | Send Slack/email summary of overdue tasks | Scheduled (weekly) | YOUR_PROJECT |
+| `slack-po-epic-todo-alert.yml` | Alert PO when >10 issues in epic are "To Do" | Scheduled (daily) | YOUR_PROJECT |
 
 ## Environment Setup
 
@@ -88,8 +88,8 @@ export JIRA_API_TOKEN='your-api-token'
 
 ## Jira Configuration
 
-- **Jira URL:** https://flow-foundry.atlassian.net
-- **Project Key:** SCRUM
+- **Jira URL:** Configure via environment variable `JIRA_BASE_URL`
+- **Project Key:** Configure via environment variable `JIRA_PROJECT_KEY`
 - **API Version:** v3 (REST API)
 
 ## Security Notes
@@ -134,7 +134,7 @@ For GitHub integration rules, configure webhooks:
 
 1. Go to your GitHub repository settings
 2. Navigate to Webhooks → Add webhook
-3. Set Payload URL to: `https://flow-foundry.atlassian.net/rest/webhooks/1.0/webhook/jira`
+3. Set Payload URL to: `https://YOUR-DOMAIN.atlassian.net/rest/webhooks/1.0/webhook/jira`
 4. Content type: `application/json`
 5. Select individual events: Pull requests, Issues
 6. Ensure webhook is active

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Bulk Delete Jira Alert Tickets Script
-# This script finds and deletes SCRUM tickets with "Workflow Health Alert:" or "CRITICAL ALERT:" in the title
+# This script finds and deletes tickets with "Workflow Health Alert:" or "CRITICAL ALERT:" in the title
 
 set -e
 
@@ -9,7 +9,7 @@ set -e
 JIRA_URL="${JIRA_URL:-https://your-domain.atlassian.net}"
 JIRA_EMAIL="${JIRA_EMAIL:-your-email@example.com}"
 JIRA_API_TOKEN="${JIRA_API_TOKEN:-your-api-token}"
-PROJECT_KEY="${PROJECT_KEY:-SCRUM}"
+PROJECT_KEY="${PROJECT_KEY:-YOUR_PROJECT}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -100,7 +100,7 @@ test_connection() {
 
 # Function to search for tickets with alert titles
 search_alert_tickets() {
-    print_status "Searching for SCRUM tickets with alert titles..."
+    print_status "Searching for $PROJECT_KEY tickets with alert titles..."
     
     # JQL query to find tickets with "Workflow Health Alert:" OR "CRITICAL ALERT:" in title
     jql_query="project = $PROJECT_KEY AND (summary ~ \"Workflow Health Alert:\" OR summary ~ \"CRITICAL ALERT:\")"
